@@ -1,5 +1,5 @@
 import { ResourceService } from '@sunbird/shared';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit } from '@angular/core';
 import { TenantService } from '@sunbird/core';
 import * as _ from 'lodash-es';
 import { IImpressionEventInput, TelemetryService, IInteractEventEdata } from '@sunbird/telemetry';
@@ -19,10 +19,10 @@ interface IGuest {
   templateUrl: './onboarding-user-selection.component.html',
   styleUrls: ['./onboarding-user-selection.component.scss']
 })
-export class OnboardingUserSelectionComponent implements OnInit {
+export class OnboardingUserSelectionComponent implements OnInit, AfterViewInit {
 
   @Input() tenantInfo: ITenantData;
-  @Output() userSelect = new EventEmitter<boolean>();
+  @Output() userSelect = new EventEmitter<any>();
 
   guestList: IGuest[] = [];
   selectedUserType: IGuest;
@@ -87,7 +87,7 @@ export class OnboardingUserSelectionComponent implements OnInit {
 
   submit() {
     localStorage.setItem('userType', this.selectedUserType.name);
-    this.userSelect.emit(true);
+    this.userSelect.emit(this.selectUserType);
   }
 
   setPopupInteractEdata() {

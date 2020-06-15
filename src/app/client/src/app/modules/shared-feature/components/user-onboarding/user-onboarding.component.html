@@ -1,11 +1,10 @@
-<sui-modal [mustScroll]="true" [isClosable]="false" [transitionDuration]="0" [size]="'normal'" class="sb-modal"
+<sui-modal [mustScroll]="true" [isClosable]="false" [transitionDuration]="0" [size]="'normal'" class="sb-modal" *ngIf="tenantInfo && showModal"
   #onboardingModal>
 
   <app-onboarding-user-selection [tenantInfo]="tenantInfo" *ngIf="stage === Stage.USER_SELECTION" (userSelect)="userTypeSubmit()">
   </app-onboarding-user-selection>
-
   <app-onboarding-location-selection *ngIf="stage === Stage.LOCATION_SELECTION" [tenantInfo]="tenantInfo"
-    [isCustodianOrgUser]="isCustodianOrgUser" [deviceProfile]="deviceProfile" (close)="locationSubmit()">
+    [isCustodianOrgUser]="isCustodianOrgUser" [deviceProfile]="ipLocation" (close)="locationSubmit($event)">
   </app-onboarding-location-selection>
-
+<app-onboarding-framework *ngIf="stage === Stage.FRAMEWORK_SELECTION" (close)="frameworkSubmit()"></app-onboarding-framework>
 </sui-modal>

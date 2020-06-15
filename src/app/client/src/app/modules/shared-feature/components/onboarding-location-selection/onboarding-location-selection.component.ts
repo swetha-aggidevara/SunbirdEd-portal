@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
 import { ResourceService, ToasterService, NavigationHelperService } from '@sunbird/shared';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeviceRegisterService, UserService } from '@sunbird/core';
@@ -17,12 +17,12 @@ import { ITenantData } from './../../../core/services/tenant/interfaces/tenant';
   templateUrl: './onboarding-location-selection.component.html',
   styleUrls: ['./onboarding-location-selection.component.scss']
 })
-export class OnboardingLocationSelectionComponent implements OnInit {
+export class OnboardingLocationSelectionComponent implements OnInit, AfterViewInit {
 
   @Input() deviceProfile: IDeviceProfile;
   @Input() isCustodianOrgUser: boolean;
   @Input() tenantInfo: ITenantData;
-  @Output() close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<any>();
 
   userDetailsForm: FormGroup;
   processedDeviceLocation: any = {};
@@ -181,7 +181,7 @@ export class OnboardingLocationSelectionComponent implements OnInit {
           // update only device profile
           this.suggestionType = 'userLocation';
         } else if (!isUserLocationConfirmed) {
-          this.setSelectedLocation(this.deviceProfile.ipLocation, true, true);
+          this.setSelectedLocation(_.get(this.deviceProfile, 'ipLocation'), true, true);
           // render using ip
           // update device location and user location
           this.suggestionType = 'ipLocation';
@@ -189,7 +189,7 @@ export class OnboardingLocationSelectionComponent implements OnInit {
       }
     } else {
       if (!(this.deviceProfile && this.deviceProfile.userDeclaredLocation)) {
-        this.setSelectedLocation(this.deviceProfile.ipLocation, false, true);
+        this.setSelectedLocation(_.get(this.deviceProfile, 'ipLocation'), false, true);
         // render using ip
         // update device profile only
         this.suggestionType = 'ipLocation';
@@ -278,9 +278,9 @@ export class OnboardingLocationSelectionComponent implements OnInit {
     }));
   }
 
-  closeModal() {
+  closeModal(data?) {
     this.popupControlService.changePopupStatus(true);
-    this.close.emit();
+    this.close.emit(data);
   }
 
   updateUserLocation() {
@@ -379,7 +379,7 @@ export class OnboardingLocationSelectionComponent implements OnInit {
       if (!_.isEmpty(res[1])) {
         this.telemetryLogEvents('User Profile', true);
       }
-      this.closeModal();
+      this.closeModal(locationDetails);
     }, (err) => {
       /* istanbul ignore else */
       if (!_.isEmpty(err[0])) {
@@ -389,7 +389,7 @@ export class OnboardingLocationSelectionComponent implements OnInit {
       if (!_.isEmpty(err[1])) {
         this.telemetryLogEvents('User Profile', false);
       }
-      this.closeModal();
+      this.closeModal(err);
     });
   }
 

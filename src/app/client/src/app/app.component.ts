@@ -511,7 +511,7 @@ export class AppComponent implements OnInit, OnDestroy {
     return message.replace('{instance}', _.upperCase(this.instance));
   }
   /** will be triggered once location popup gets closed */
-  onLocationSubmit() {
+  frameworkSubmit() {
     if (this.userFeed) {
       this.showUserVerificationPopup = true;
     }

@@ -9,7 +9,7 @@
       <div class="schooling-location" *ngIf="deviceProfile" [appTelemetryImpression]="telemetryImpression">
         <form class="sb-form" [formGroup]="userDetailsForm">
           <div class="fields-selection">
-            <div class="sb-field field-focus">
+            <div class="sb-field field-focus location-space-content mr-24">
               <select class="ui dropdown selection fields-dropdown" formControlName="state">
                 <option [ngValue]="null" hidden selected>{{resourceService?.frmelmnts?.lbl?.selectState}}</option>
                 <option [ngValue]="option.code" *ngFor="let option of allStates">{{option?.name}}
@@ -17,7 +17,7 @@
               </select>
               <label class="d-flex font-weight-normal">{{resourceService?.frmelmnts?.lbl?.state}}:</label>
             </div>
-            <div class="sb-field field-focus onboard-content mt-16">
+            <div class="sb-field field-focus">
               <select class="ui dropdown selection fields-dropdown" formControlName="district"
                 [disabled]="showDistrictDivLoader">
                 <option [ngValue]="null" selected hidden>{{resourceService?.frmelmnts?.lbl?.profile?.selectDistrict}}
@@ -36,7 +36,8 @@
     <div class="sb-onboard__footer">
       <button type="button" class="sb-btn sb-btn-sm sb-btn-primary text-uppercase w-100" type="submit"
         [ngClass]="{'sb-btn-disabled': !enableSubmitBtn}" [disabled]="!enableSubmitBtn"
-        (click)="updateUserLocation()">{{resourceService?.frmelmnts?.btn?.submit}}
+        (click)="updateUserLocation()">{{resourceService?.frmelmnts?.lbl?.continue}}
+        
         <span class='arrow-icon'>
           <em class="icon-svg icon-svg--xxs icon-back">
             <svg class="icon icon-svg--white">
