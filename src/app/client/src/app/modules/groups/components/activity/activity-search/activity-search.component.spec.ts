@@ -214,7 +214,7 @@ describe('ActivitySearchComponent', () => {
     component.addActivity(event);
     expect(component.addTelemetry).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/resources/play/content', event.identifier],
-    {queryParams: {groupId: 'adfddf-sdsds-wewew-sds'}});
+    {queryParams: {groupId: 'adfddf-sdsds-wewew-sds', contentType: 'Explanation content'}});
   });
 
   it('should navigate to resource page if contentType is trackable and mime type is collection', () => {
@@ -239,7 +239,7 @@ describe('ActivitySearchComponent', () => {
     component.addActivity(event);
     expect(component.addTelemetry).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/resources/play/collection', event.identifier],
-    {queryParams: {groupId: 'adfddf-sdsds-wewew-sds'}});
+    {queryParams: {groupId: 'adfddf-sdsds-wewew-sds', contentType: 'eTextbook'}});
   });
 
   it('should navigate to content details page on click of "View activity" from hover card', () => {
