@@ -1,7 +1,7 @@
 
 import { combineLatest as observableCombineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
 import { CourseConsumptionService, CourseProgressService } from './../../../services';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash-es';
@@ -17,6 +17,7 @@ import { GroupsService } from '../../../../groups/services/groups/groups.service
 import { NavigationHelperService } from '@sunbird/shared';
 import { CsGroupAddableBloc } from '@project-sunbird/client-services/blocs';
 import { CourseBatchService } from './../../../services';
+import { CsCourseService } from '@project-sunbird/client-services/services/course/interface';
 
 @Component({
   selector: 'app-course-consumption-header',
@@ -82,15 +83,19 @@ export class CourseConsumptionHeaderComponent implements OnInit, AfterViewInit, 
     private telemetryService: TelemetryService, private groupService: GroupsService,
     private navigationHelperService: NavigationHelperService, public orgDetailsService: OrgDetailsService,
     public generaliseLabelService: GeneraliseLabelService,
-    public courseBatchService: CourseBatchService) { }
+    public courseBatchService: CourseBatchService,
+    @Inject('CS_COURSE_SERVICE') private courseCService: CsCourseService) { }
 
   showJoinModal(event) {
     this.courseConsumptionService.showJoinCourseModal.emit(event);
   }
 
   ngOnInit() {
+    this.courseCService.getForumId({courseId: _.get(this.courseHierarchy, 'identifier'), batchId: _.get(this.enrolledBatchInfo, 'id')})
+    .subscribe(data => {
+      this.forumId = _.get(data, 'forumId');
+    });
     this.getCustodianOrgUser();
-    this.forumId = _.get(this.courseHierarchy, 'forumId') || _.get(this.courseHierarchy, 'metaData.forumId');
     if (!this.courseConsumptionService.getCoursePagePreviousUrl) {
       this.courseConsumptionService.setCoursePagePreviousUrl();
     }
@@ -287,7 +292,7 @@ export class CourseConsumptionHeaderComponent implements OnInit, AfterViewInit, 
   }
 
   openDiscussionForum() {
-    this.router.navigate(['/discussions'], {queryParams: {forumId: this.forumId} });
+    this.router.navigate(['/discussions'], {queryParams: {forumId: this.forumId, userId: this.userService.userid} });
   }
   async goBack() {
     const previousPageUrl: any = this.courseConsumptionService.getCoursePagePreviousUrl;
